@@ -1,0 +1,28 @@
+.head {
+    width: 100%;
+    text-align: center;
+}
+
+.row-grid {
+    margin-right: 25%;
+    margin-left: 25%;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+}
+
+.elm {
+
+    border: black solid 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    cursor: pointer;
+}
+
+
+.elm:hover {
+    box-shadow: 3px 3px 15px gray;
+}
