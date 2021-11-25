@@ -86,21 +86,20 @@ export class Node {
 ////////////////////////////////////////////////////////////////////////// AI logic
 
 
-    public build_tree {
+    public build_tree() {
         if (this.winner === 0) {
-            for (i in [0,1,2,3,4,5,6,7,8]) {
+            for (const i in [0,1,2,3,4,5,6,7,8]) {
                 if (this.grid[i] === 0) {       //only continues the tree if game is not finished
-                    this.children.push(build_Node(this.grid, this.player, i))
+                    this.children.push(this.build_Node(this.grid, this.player, i))
                 }
             }
             let children_winner:number[] = [-2]     //evaluation
-            for (child in this.children){
-                children_winner.build_tree()
+            for (const child in this.children){
+                child.build_tree()
                 children_winner.push(child.winner * this.player)        //evaluation
                 this.winner = Math.max(children_winner) * this.player   //evaluation
             }
         }
         else {return}
     }
-
 }
