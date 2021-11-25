@@ -3,13 +3,24 @@
     text-align: center;
 }
 
-.row-grid {
-    margin-right: 25%;
-    margin-left: 25%;
 
+@media (max-width: 600px){
+    .row-grid {
+        margin-right: 0;
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 600px) {
+    .row-grid {
+        margin-right: 30%;
+        margin-left: 30%;
+    }
+}
+
+.row-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: minmax(100px, auto);
 }
 
 .elm {
@@ -20,7 +31,11 @@
     justify-content: center;
     font-size: 50px;
     cursor: pointer;
+    aspect-ratio: 1;
 }
+
+
+
 
 
 .elm:hover {

@@ -77,7 +77,6 @@ class App extends React.Component<Props, State> {
         } else {
             return;
         }
-
     }
 
     private static renderInner(inner: number) {
@@ -90,7 +89,6 @@ class App extends React.Component<Props, State> {
                 return "-";
         }
     }
-
 
 }
 

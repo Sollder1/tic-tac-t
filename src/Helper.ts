@@ -20,7 +20,6 @@ export default class Helper {
         const grid = field;
         const otherPlayer = player === Helper.P_AI ? Helper.P_HU : Helper.P_AI;
 
-
         //Gewonnen und wenn ja, wer?
         for (let i: number = 0; i < 2; i++) {
             const evalVertical: number[] = [grid[i][0], grid[i][1], grid[i][2]];
