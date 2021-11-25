@@ -1,8 +1,7 @@
 import React from 'react';
 import './App.css';
 import Helper from "./Helper";
-import Ai from "./Ai";
-
+import {Ai} from "./Ai";
 
 interface Props {
 
@@ -32,7 +31,7 @@ class App extends React.Component<Props, State> {
                 return <div className="row-grid">
                     {
                         value.map((inner, j) => {
-                            return <div className="elm"
+                            return <div className="elm" key={i + "" + j} id={i + "" + j}
                                         onClick={e => this.handleClick(i, j)}>{App.renderInner(inner)}</div>;
                         })
                     }
@@ -44,22 +43,26 @@ class App extends React.Component<Props, State> {
     }
 
     private handleClick(i: number, j: number) {
+        let field = JSON.parse(JSON.stringify(this.state.field));
+
         try {
-            let field = this.state.field;
             if (!this.state.stateOut && Helper.isNotTaken(field, i, j)) {
                 field[i][j] = Helper.P_HU;
-                this.setState({field: field});
                 let result: number = Helper.calculateResult(field, Helper.P_HU)
                 this.handleResult(result, Helper.P_HU);
 
                 Ai.aiMove(field);
-
-                result = Helper.calculateResult(field, Helper.P_AI)
+                result = Helper.calculateResult(field, Helper.P_AI);
                 this.handleResult(result, Helper.P_AI);
             }
         } catch (e) {
-            console.log("Escapeing...")
+            console.log("Escapeing...");
+            this.setState({field: field});
         }
+
+        this.setState({field: field});
+
+
     }
 
     private handleResult(result: number, player: number) {

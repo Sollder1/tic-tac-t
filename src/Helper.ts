@@ -1,7 +1,6 @@
 
 export default class Helper {
 
-
     public static P_HU = 1;
     public static P_AI = 2;
 
@@ -15,13 +14,12 @@ export default class Helper {
      1: Mensch
      2: KI
   */
-    public static calculateResult(field: number[][], player: number) {
+    public static calculateResult(grid: number[][], player: number) {
 
-        const grid = field;
         const otherPlayer = player === Helper.P_AI ? Helper.P_HU : Helper.P_AI;
 
         //Gewonnen und wenn ja, wer?
-        for (let i: number = 0; i < 2; i++) {
+        for (let i: number = 0; i < 3; i++) {
             const evalVertical: number[] = [grid[i][0], grid[i][1], grid[i][2]];
             const evalHorizontal: number[] = [grid[0][i], grid[1][i], grid[2][i]];
 
