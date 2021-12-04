@@ -41,13 +41,15 @@ export class AI_Node {
 
 
     public static toLinearArray(grid: number[][]): number[] {
-        return [grid[0][0], grid[0][1], grid[0][2], grid[1][0], grid[1][1], grid[1][2], grid[2][0], grid[2][1], grid[2][2]];
+        let transform = [grid[0][0], grid[0][1], grid[0][2], grid[1][0], grid[1][1], grid[1][2], grid[2][0], grid[2][1], grid[2][2]];
+        for (let i: number = 0; i < 9; i++) {
+            if (transform[i] === 2) {
+                transform[i] = -1
+            }
+        }
+        return transform
     }
 
-
-    public static to2DArray(grid: number[]): number[][] {
-        return [[grid[0], grid[1], grid[2]], [grid[3], grid[4], grid[5]], [grid[6], grid[7], grid[8]]]
-    }
 
 
     public has_won(grid: number[]): number {
@@ -70,7 +72,7 @@ export class AI_Node {
     public build_Node(grid: number[], player: number, i: number): AI_Node {
         let new_grid: number[] = JSON.parse(JSON.stringify(grid))
         new_grid[i] = player
-        return new AI_Node(this.grid = new_grid, this.player = -player, this.move = i, this.winner = this.has_won(new_grid), this.children = [])
+        return new AI_Node(new_grid, -player, i, this.has_won(new_grid), [])
     }
 
 
@@ -84,11 +86,13 @@ export class AI_Node {
                     this.children.push(this.build_Node(this.grid, this.player, i))
                 }
             }
-            let children_winner: number[] = [-2]     //evaluation
+            let children_winner: number[] = []     //evaluation
             for (let i = 0; i < this.children.length; i++) {
                 this.children[i].build_tree()
                 children_winner.push(this.children[i].winner * this.player)        //evaluation
-                this.winner = Math.max(...children_winner) * this.player   //evaluation
+                if (children_winner != []) {
+                    this.winner = Math.max(...children_winner) * this.player   //evaluation
+                }
             }
         } else {
             return
@@ -120,58 +124,9 @@ export class AI_Node {
     public static calc_move(grid: number[][], randomized: boolean) {
         let current_Node = new AI_Node(AI_Node.toLinearArray(grid), 1, 0, 0, [])
         current_Node.build_tree()
+        console.log(current_Node.children)
         return current_Node.node_search(randomized)
     }
 
-////////////////////////////////////////////////////////////////////////// IO
-
-
 }
 
-
-/*
-
-
-////////////////////////////////////////////////////////////////////////// main
-
-
-if AI_begins:
-    root = Node([0,0,0,0,0,0,0,0,0], 1, 0, 0) //Node with empty grid
-    root.build_tree()   //builds tree on empty grid
-else:
-    root = Node([0,0,0,0,0,0,0,0,0], -1, 0, 0) //Node with empty grid
-    root.build_tree()   //builds tree on empty grid
-
-
-def main():
-    print()
-    print()
-    print()
-    print("Return the number at which grid position your X shall be")
-    print("1","|","2","|","3") //original farmat
-    print("4","|","5","|","6")
-    print("7","|","8","|","9")
-    print()
-    if AI_begins:
-        if randomized:      //AI evaluates every first movve as 0, so we can randomize
-            (root.children[random.randint(0, 8)]).input_output()  //randomized version
-        else:
-            (root.children[4]).input_output()                    //persistent version
-    else:
-        root.input_output()
-
-    //for c in root.children:        //debugging
-    //    print ("1.", c.grid, c.player, c.move, c.winner)
-    //    for i in c.children:
-    //        print("2.", i.grid, i.player,i.move, i.winner)
-    //        for j in i.children:
-    //            print("3.", j.grid, j.player, j.move, j.winner)
-    //            for k in j.children:
-    //                print("4.", k.grid, k.player, k.move, k.winner)
-
-
-
-if __name__ == "__main__":
-    main()
-
-*/

@@ -19,8 +19,7 @@ export class Ai {
                 throw new Error("Kein Move!");
             }
         } else if (algorithm === 3) {
-            const move = AI_Node.calc_move(field, true);
-            console.log(move)
+            const move = AI_Node.calc_move(field, false);
             field[Math.floor(move/3)][move%3] = Helper.P_AI;
         }
     }
