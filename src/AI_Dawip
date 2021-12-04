@@ -94,12 +94,49 @@ export class Node {
                 }
             }
             let children_winner:number[] = [-2]     //evaluation
-            for (const child in this.children){
-                child.build_tree()
-                children_winner.push(child.winner * this.player)        //evaluation
-                this.winner = Math.max(children_winner) * this.player   //evaluation
+            for (let i = 0; i < this.children.length; i++){
+                this.children[i].build_tree()
+                children_winner.push(this.children[i].winner * this.player)        //evaluation
+                this.winner = Math.max(...children_winner) * this.player   //evaluation
             }
         }
         else {return}
     }
+
+    public node_search() {
+        let value:number = -2
+        let current_child:number = 0
+        for (let i = 0; i < this.children.length; i++){
+            if (randomized) {
+                if ((this.children[i].winner > value) || ((this.children[i].winner === value) && (Math.random() > 0.66 ))) {
+                    value = this.children[i].winner
+                    current_child = i
+                }
+            }
+            else {
+                if (this.children[i].winner > value) {
+                    value = this.children[i].winner
+                    current_child = i
+                }
+            }
+        }
+        if (this.children[current_child].children === []) {
+            if (this.children[current_child].winner === 0) {
+                this.children[current_child].draw()
+            }
+            else {
+                this.children[current_child].looser()
+            }
+        }
+        else{
+            this.children[current_child].input_output()
+        }
+    }
+
+////////////////////////////////////////////////////////////////////////// IO
+
+
+
+    
+
 }
