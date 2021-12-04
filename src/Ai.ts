@@ -8,10 +8,8 @@ export interface Move {
 
 export class Ai {
 
-    public static AI_MODE = 2;
-
-    public static aiMove(field: number[][]) {
-        if (Ai.AI_MODE === 1) {
+    public static aiMove(field: number[][], algorithm: number) {
+        if (algorithm === 1) {
             Ai.randomAiMove(field);
         } else {
             const move = Ai.treeSearchAiMove(field, Helper.P_AI);
@@ -42,7 +40,6 @@ export class Ai {
 
         let bestMoveEval: number = -2;
         let bestMove: Move | null = null;
-
 
         for (let i: number = 0; i < moves.length; i++) {
 
