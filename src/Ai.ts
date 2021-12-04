@@ -45,61 +45,47 @@ export class Ai {
 
 
         for (let i: number = 0; i < moves.length; i++) {
-            const move: Move = moves[i];
+
             const fieldCp: number[][] = JSON.parse(JSON.stringify(field));
+            const move: Move = moves[i];
             fieldCp[move.i][move.j] = Helper.P_AI;
-            //const result: number = this.evaluateMoveDeep(fieldCp, Helper.P_AI);
 
-            let result = Helper.calculateResult(field, player);
-            if (result >= bestMoveEval) {
+            let result = this.evaluateMoveDeep(fieldCp, Helper.P_HU, 0);
+            if (result > bestMoveEval) {
                 bestMoveEval = result;
-                bestMove = move;
+                bestMove = moves[i];
             }
-
-            //Spiel ended hier...
-            if(result !== 0) {
-                continue;
-            }
-            result = this.evaluateMoveDeep(fieldCp, Helper.P_HU);
-
-            if (result >= bestMoveEval) {
-                bestMoveEval = result;
-                bestMove = move;
-            }
-            
+            console.log(bestMoveEval);
         }
 
-        if(bestMove){
+        if (bestMove) {
             bestMove.evaluation = bestMoveEval;
         }
         return bestMove;
     }
 
-    public static evaluateMoveDeep(field: number[][], player: number): number {
+    public static evaluateMoveDeep(field: number[][], player: number, depth: number): number {
         const moves: Move[] = this.getValidMoves(field);
-        let bestMoveEval: number = -2;
-        let otherPlayer = player === Helper.P_AI ? Helper.P_HU : Helper.P_AI;
+        let moveEvals: number[] = [];
+        let otherPlayer = (player === Helper.P_AI ? Helper.P_HU : Helper.P_AI);
+
+        if (moves.length === 0) {
+            return Helper.calculateResult(field, Helper.P_AI);
+        }
 
         for (let i: number = 0; i < moves.length; i++) {
             const move: Move = moves[i];
             const fieldCp: number[][] = JSON.parse(JSON.stringify(field));
-            fieldCp[move.i][move.j] = Helper.P_AI;
-
-            let result = Helper.calculateResult(fieldCp, otherPlayer);
-            if(result !== 0) {
-                if (result >= bestMoveEval) {
-                    bestMoveEval = result;
-                }
-                continue;
-            }
-            result = this.evaluateMoveDeep(fieldCp, otherPlayer);
-            if (result >= bestMoveEval) {
-                bestMoveEval = result;
-            }
+            fieldCp[move.i][move.j] = player;
+            let result = this.evaluateMoveDeep(fieldCp, otherPlayer, ++depth);
+            moveEvals.push(result);
         }
 
-        return bestMoveEval;
-
+        if(player === Helper.P_AI) {
+            return Math.max(...moveEvals);
+        }else {
+            return Math.min(...moveEvals);
+        }
     }
 
 
