@@ -78,9 +78,9 @@ export class Ai {
             moveEvals.push(result);
         }
 
-        if(player === Helper.P_AI) {
+        if (player === Helper.P_AI) {
             return Math.max(...moveEvals);
-        }else {
+        } else {
             return Math.min(...moveEvals);
         }
     }
