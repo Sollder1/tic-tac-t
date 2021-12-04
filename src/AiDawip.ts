@@ -1,3 +1,5 @@
+
+
 //default settings
 let randomized: boolean = true
 let AI_begins:boolean = true
