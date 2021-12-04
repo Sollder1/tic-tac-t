@@ -1,10 +1,6 @@
-
-
 //default settings
-let randomized: boolean = true
-let AI_begins:boolean = true
-
-
+let randomized: boolean = false
+let AI_begins: boolean = false
 
 
 /*  Node formt: explanation
@@ -37,8 +33,7 @@ export class Node {
     children: Node[] = []
 
 
-
-    constructor(grid: number[], player:number, move:number, winner:number, children: Node[]) {
+    constructor(grid: number[], player: number, move: number, winner: number, children: Node[]) {
         this.grid = grid
         this.player = player
         this.move = move
@@ -64,18 +59,21 @@ export class Node {
         let evaluation: number[] = [(grid[0] + grid[1] + grid[2]), (grid[3] + grid[4] + grid[5]), (grid[6] + grid[7] + grid[8]),
             (grid[0] + grid[3] + grid[6]), (grid[1] + grid[4] + grid[7]), (grid[2] + grid[5] + grid[8]),
             (grid[0] + grid[4] + grid[8]), (grid[6] + grid[4] + grid[2])]
-        for (let i: number = 0; i < grid.length; i++) {
-            if (grid[i] === -3) {
-                return -1}
-            else if (grid[i] === 3) {
-                return 1}
-            return 0
+        for (let i: number = 0; i < evaluation.length; i++) {
+            if (evaluation[i] === -3) {
+                return -1
+            } else if (evaluation[i] === 3) {
+                return 1
+            } else {
+                return 0
+            }
         }
+        throw new Error ("this error makes no sense")
     }
 
 
     public build_Node(grid: number[], player: number, i: number): Node {
-        let new_grid:number[] = JSON.parse(JSON.stringify(grid))
+        let new_grid: number[] = JSON.parse(JSON.stringify(grid))
         new_grid[i] = player
         return new Node(this.grid = new_grid, this.player = -player, this.move = i, this.winner = this.has_won(new_grid), this.children = [])
     }
@@ -86,33 +84,33 @@ export class Node {
 
     public build_tree() {
         if (this.winner === 0) {
-            for (const i in [0,1,2,3,4,5,6,7,8]) {
+            for (let i: number = 0; i < 9; i++) {
                 if (this.grid[i] === 0) {       //only continues the tree if game is not finished
                     this.children.push(this.build_Node(this.grid, this.player, i))
                 }
             }
-            let children_winner:number[] = [-2]     //evaluation
-            for (let i = 0; i < this.children.length; i++){
+            let children_winner: number[] = [-2]     //evaluation
+            for (let i = 0; i < this.children.length; i++) {
                 this.children[i].build_tree()
                 children_winner.push(this.children[i].winner * this.player)        //evaluation
                 this.winner = Math.max(...children_winner) * this.player   //evaluation
             }
+        } else {
+            return
         }
-        else {return}
     }
 
 
     public node_search(): number[][] {
-        let value:number = -2
-        let current_child:number = 0
-        for (let i = 0; i < this.children.length; i++){
+        let value: number = -2
+        let current_child: number = 0
+        for (let i = 0; i < this.children.length; i++) {
             if (randomized) {
-                if ((this.children[i].winner > value) || ((this.children[i].winner === value) && (Math.random() > 0.66 ))) {
+                if ((this.children[i].winner > value) || ((this.children[i].winner === value) && (Math.random() > 0.66))) {
                     value = this.children[i].winner
                     current_child = i
                 }
-            }
-            else {
+            } else {
                 if (this.children[i].winner > value) {
                     value = this.children[i].winner
                     current_child = i
@@ -127,24 +125,18 @@ export class Node {
 
 
     public user_move_mover(wrong_grid: number[][]) {
-        let grid:number[] = Node.toLinearArray(wrong_grid)
-        for (let i = 0; i < this.children.length; i++){
+        let grid: number[] = Node.toLinearArray(wrong_grid)
+        for (let i = 0; i < this.children.length; i++) {
             if (this.children[i].grid === grid) {
                 if (this.children[i].children === []) {
                     return Node.to2DArray(this.children[i].grid)
                 }
-            }
-            else {
+            } else {
                 this.children[i].node_search()
             }
         }
     }
 }
-
-
-
-
-
 
 
 /*

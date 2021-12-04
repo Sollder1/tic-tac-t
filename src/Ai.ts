@@ -11,13 +11,15 @@ export class Ai {
     public static aiMove(field: number[][], algorithm: number) {
         if (algorithm === 1) {
             Ai.randomAiMove(field);
-        } else {
+        } else if (algorithm === 2) {
             const move = Ai.treeSearchAiMove(field, Helper.P_AI);
             if (move) {
                 field[move.i][move.j] = Helper.P_AI;
             } else {
                 throw new Error("Kein Move!");
             }
+        } else if (algorithm === 3) {
+            // todo
         }
     }
 
