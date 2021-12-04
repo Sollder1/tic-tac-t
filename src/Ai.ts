@@ -8,11 +8,14 @@ export interface Move {
 }
 
 export class Ai {
+
+    private static MAX_DEPTH: number = 100;
+
     public static aiMove(field: number[][], algorithm: number) {
         if (algorithm === 1) {
             Ai.randomAiMove(field);
         } else if (algorithm === 2) {
-            const move = Ai.treeSearchAiMove(field, Helper.P_AI);
+            const move = Ai.treeSearchAiMove(field);
             if (move) {
                 field[move.i][move.j] = Helper.P_AI;
             } else {
@@ -20,7 +23,7 @@ export class Ai {
             }
         } else if (algorithm === 3) {
             const move = AI_Node.calc_move(field, false);
-            field[Math.floor(move/3)][move%3] = Helper.P_AI;
+            field[Math.floor(move / 3)][move % 3] = Helper.P_AI;
         }
     }
 
@@ -37,7 +40,7 @@ export class Ai {
     }
 
 
-    public static treeSearchAiMove(field: number[][], player: number): Move | null {
+    public static treeSearchAiMove(field: number[][]): Move | null {
 
         const moves: Move[] = this.getValidMoves(field);
 
@@ -69,7 +72,7 @@ export class Ai {
         let moveEvals: number[] = [];
         let otherPlayer = (player === Helper.P_AI ? Helper.P_HU : Helper.P_AI);
 
-        if (moves.length === 0) {
+        if (moves.length === 0 || depth > Ai.MAX_DEPTH) {
             return Helper.calculateResult(field, Helper.P_AI);
         }
 
