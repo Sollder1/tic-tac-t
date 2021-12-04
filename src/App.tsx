@@ -2,14 +2,9 @@ import React from 'react';
 import './App.css';
 import Helper from "./Helper";
 import {Ai} from "./Ai";
-import {
-    AppBar,
-    Button,
-    FormControl,
-    Grid, InputLabel, MenuItem,
-    Paper, Select,
-} from "@mui/material";
+import {AppBar, Button, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Paper, Select,} from "@mui/material";
 import ReplayIcon from '@mui/icons-material/Replay';
+import Checkbox from '@mui/material/Checkbox';
 
 interface Props {
 
@@ -19,7 +14,8 @@ interface State {
     field: number[][],
     stateOut?: string,
     gameStillRunning: boolean,
-    algorithm: number
+    algorithm: number,
+    randomOnDraw: boolean
 }
 
 class App extends React.Component<Props, State> {
@@ -32,7 +28,8 @@ class App extends React.Component<Props, State> {
                 [0, 0, 0]],
             stateOut: "Spiel läuft noch",
             gameStillRunning: true,
-            algorithm: 1
+            algorithm: 2,
+            randomOnDraw: true
         };
     }
 
@@ -56,29 +53,36 @@ class App extends React.Component<Props, State> {
                     <Paper elevation={5} style={{padding: "20px"}}>
                         <h2 className="head">
                             {this.state.stateOut}
-                            {!this.state.gameStillRunning ? <Button style={ {marginLeft: "10px"} } variant="contained" onClick={ev => this.handleRestart()}><ReplayIcon/></Button> : null}
+                            {!this.state.gameStillRunning ? <Button style={{marginLeft: "10px"}} variant="contained"
+                                                                    onClick={ev => this.handleRestart()}><ReplayIcon/></Button> : null}
                         </h2>
 
-                        <h2 style={ {marginTop: "50px"} }>Einstellungen</h2>
-                                <FormControl fullWidth>
-                                    <InputLabel>Algorithmus</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={this.state.algorithm}
-                                        label="Algorithmus"
-                                        onChange={val => this.setState({algorithm: val.target.value as number})}
-                                    >
-                                        <MenuItem value={1}>Zufallsbasiert</MenuItem>
-                                        <MenuItem value={2}>Sollder1 Baumsuche</MenuItem>
-                                        <MenuItem value={3}>Manstein Baumsuche</MenuItem>
-                                    </Select>
-                                </FormControl>
+                        <h2 style={{marginTop: "50px"}}>Einstellungen</h2>
+                        <FormControl fullWidth>
+                            <InputLabel>Algorithmus</InputLabel>
+                            <Select
+                                value={this.state.algorithm}
+                                label="Algorithmus"
+                                onChange={val => this.setState({algorithm: val.target.value as number})}
+                            >
+                                <MenuItem value={1}>Zufallsbasiert</MenuItem>
+                                <MenuItem value={2}>Sollder1 Baumsuche</MenuItem>
+                                <MenuItem value={3}>Manstein Baumsuche</MenuItem>
+                            </Select>
+                        </FormControl>
+
+
+                        <FormControlLabel
+                            label="Zufällige Auswahl bei gleichen Zügen"
+                            control={<Checkbox
+                                checked={this.state.randomOnDraw}
+                                onChange={val => this.setState({randomOnDraw: val.target.checked})}
+                            />}
+                            style={{padding: "10px"}}
+                        />
                     </Paper>
                 </Grid>
             </Grid>
-
-
         </>;
     }
 
