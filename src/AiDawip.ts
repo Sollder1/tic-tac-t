@@ -1,8 +1,3 @@
-//default settings
-let randomized: boolean = false
-let AI_begins: boolean = false
-
-
 /*  Node formt: explanation
 
 grid format: filled with -1 or 1 if 
@@ -25,15 +20,15 @@ for leafs: return from has_won function
 ////////////////////////////////////////////////////////////////////////// Node Class
 
 
-export class Node {
+export class AI_Node {
     grid: number[]
     player: number
     move: number
     winner: number
-    children: Node[] = []
+    children: AI_Node[] = []
 
 
-    constructor(grid: number[], player: number, move: number, winner: number, children: Node[]) {
+    constructor(grid: number[], player: number, move:number, winner: number, children: AI_Node[]) {
         this.grid = grid
         this.player = player
         this.move = move
@@ -72,10 +67,10 @@ export class Node {
     }
 
 
-    public build_Node(grid: number[], player: number, i: number): Node {
+    public build_Node(grid: number[], player: number, i: number): AI_Node {
         let new_grid: number[] = JSON.parse(JSON.stringify(grid))
         new_grid[i] = player
-        return new Node(this.grid = new_grid, this.player = -player, this.move = i, this.winner = this.has_won(new_grid), this.children = [])
+        return new AI_Node(this.grid = new_grid, this.player = -player, this.move = i, this.winner = this.has_won(new_grid), this.children = [])
     }
 
 
@@ -101,7 +96,7 @@ export class Node {
     }
 
 
-    public node_search(): number[][] {
+    public node_search(randomized: boolean): number{
         let value: number = -2
         let current_child: number = 0
         for (let i = 0; i < this.children.length; i++) {
@@ -117,25 +112,20 @@ export class Node {
                 }
             }
         }
-        return Node.to2DArray(this.children[current_child].grid)
+        return this.children[current_child].move
     }
 
+
+
+    public static calc_move(grid: number[][], randomized: boolean) {
+        let current_Node = new AI_Node(AI_Node.toLinearArray(grid), 1, 0, 0, [])
+        current_Node.build_tree()
+        return current_Node.node_search(randomized)
+    }
 
 ////////////////////////////////////////////////////////////////////////// IO
 
 
-    public user_move_mover(wrong_grid: number[][]) {
-        let grid: number[] = Node.toLinearArray(wrong_grid)
-        for (let i = 0; i < this.children.length; i++) {
-            if (this.children[i].grid === grid) {
-                if (this.children[i].children === []) {
-                    return Node.to2DArray(this.children[i].grid)
-                }
-            } else {
-                this.children[i].node_search()
-            }
-        }
-    }
 }
 
 

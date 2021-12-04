@@ -1,4 +1,5 @@
 import Helper from "./Helper";
+import {AI_Node} from "./AiDawip";
 
 export interface Move {
     i: number,
@@ -7,7 +8,6 @@ export interface Move {
 }
 
 export class Ai {
-
     public static aiMove(field: number[][], algorithm: number) {
         if (algorithm === 1) {
             Ai.randomAiMove(field);
@@ -19,7 +19,9 @@ export class Ai {
                 throw new Error("Kein Move!");
             }
         } else if (algorithm === 3) {
-            // todo
+            const move = AI_Node.calc_move(field, true);
+            console.log(move)
+            field[Math.floor(move/3)][move%3] = Helper.P_AI;
         }
     }
 
