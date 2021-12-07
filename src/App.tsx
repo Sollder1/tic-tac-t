@@ -53,8 +53,8 @@ class App extends React.Component<Props, State> {
                     <Paper elevation={5} style={{padding: "20px"}}>
                         <h2 className="head">
                             {this.state.stateOut}
-                            {!this.state.gameStillRunning ? <Button style={{marginLeft: "10px"}} variant="contained"
-                                                                    onClick={ev => this.handleRestart()}><ReplayIcon/></Button> : null}
+                            <Button style={{marginLeft: "10px"}} variant="contained"
+                                    onClick={() => this.handleRestart()}><ReplayIcon/></Button>
                         </h2>
 
                         <h2 style={{marginTop: "50px"}}>Einstellungen</h2>
@@ -93,7 +93,7 @@ class App extends React.Component<Props, State> {
                     {
                         value.map((inner, j) => {
                             return <div className="elm" key={i + "" + j} id={i + "" + j}
-                                        onClick={e => this.handleClick(i, j)}>{App.renderInner(inner)}</div>;
+                                        onClick={() => this.handleClick(i, j)}>{App.renderInner(inner)}</div>;
                         })
                     }
                 </div>
@@ -120,8 +120,6 @@ class App extends React.Component<Props, State> {
         }
 
         this.setState({field: field});
-
-
     }
 
     private handleResult(result: number, player: number) {
