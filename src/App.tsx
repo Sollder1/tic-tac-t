@@ -28,7 +28,7 @@ class App extends React.Component<Props, State> {
                 [0, 0, 0]],
             stateOut: "Spiel läuft noch",
             gameStillRunning: true,
-            algorithm: 2,
+            algorithm: 3,
             randomOnDraw: true
         };
     }
@@ -110,7 +110,7 @@ class App extends React.Component<Props, State> {
                 let result: number = Helper.calculateResult(field, Helper.P_HU)
                 this.handleResult(result, Helper.P_HU);
 
-                Ai.aiMove(field, this.state.algorithm);
+                Ai.aiMove(field, this.state.algorithm, this.state.randomOnDraw);
                 result = Helper.calculateResult(field, Helper.P_AI);
                 this.handleResult(result, Helper.P_AI);
             }

@@ -1,19 +1,15 @@
 /*  Node formt: explanation
-
-grid format: filled with -1 or 1 if 
+grid format: filled with -1 or 1 if
        0 | 1 | 2
        3 | 4 | 5
        6 | 7 | 8
    example: grid = [0, -1, 0, 1, 1, 0, -1, 0, 0]
-
 player: the player how made the move that lead to this position
    AI = 1 = "O" , user = -1 = "X"
-
 move:  the move that lead to this position (given as the grid position)
-
 winner:
 for leafs: return from has_won function
-   0 or -1 or 1     
+   0 or -1 or 1
 */
 
 
@@ -61,18 +57,17 @@ export class AI_Node {
                 return -1
             } else if (evaluation[i] === 3) {
                 return 1
-            } else {
-                return 0
             }
         }
-        throw new Error ("this error makes no sense")
+        return 0
     }
 
 
     public build_Node(grid: number[], player: number, i: number): AI_Node {
         let new_grid: number[] = JSON.parse(JSON.stringify(grid))
         new_grid[i] = player
-        return new AI_Node(new_grid, -player, i, this.has_won(new_grid), [])
+        let winner = this.has_won(new_grid)
+        return new AI_Node(new_grid, -player, i, winner, [])
     }
 
 
@@ -83,34 +78,31 @@ export class AI_Node {
         if (this.winner === 0) {
             for (let i: number = 0; i < 9; i++) {
                 if (this.grid[i] === 0) {       //only continues the tree if game is not finished
-                    this.children.push(this.build_Node(this.grid, this.player, i))
+                    let new_child = this.build_Node(this.grid, this.player, i)
+                    this.children.push(new_child)
                 }
             }
             let children_winner: number[] = []     //evaluation
             for (let i = 0; i < this.children.length; i++) {
                 this.children[i].build_tree()
                 children_winner.push(this.children[i].winner * this.player)        //evaluation
-                if (children_winner != []) {
-                    this.winner = Math.max(...children_winner) * this.player   //evaluation
-                }
+                this.winner = Math.max(...children_winner) * this.player
             }
-        } else {
-            return
         }
     }
 
 
     public node_search(randomized: boolean): number{
-        let value: number = -2
+        let value: number = 2
         let current_child: number = 0
         for (let i = 0; i < this.children.length; i++) {
             if (randomized) {
-                if ((this.children[i].winner > value) || ((this.children[i].winner === value) && (Math.random() > 0.66))) {
+                if ((this.children[i].winner < value) || ((this.children[i].winner === value) && (Math.random() > 0.66))) {
                     value = this.children[i].winner
                     current_child = i
                 }
             } else {
-                if (this.children[i].winner > value) {
+                if (this.children[i].winner < value) {
                     value = this.children[i].winner
                     current_child = i
                 }
@@ -122,11 +114,14 @@ export class AI_Node {
 
 
     public static calc_move(grid: number[][], randomized: boolean) {
-        let current_Node = new AI_Node(AI_Node.toLinearArray(grid), 1, 0, 0, [])
+        let current_Node = new AI_Node(AI_Node.toLinearArray(grid), -1, 0, 0, [])
         current_Node.build_tree()
+        console.log(current_Node)
         console.log(current_Node.children)
+        for (let i = 0; i < current_Node.children.length; i++) {
+            console.log(current_Node.children[i].children)
+        }
         return current_Node.node_search(randomized)
     }
 
 }
-

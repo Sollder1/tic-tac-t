@@ -11,7 +11,7 @@ export class Ai {
 
     private static MAX_DEPTH: number = 100;
 
-    public static aiMove(field: number[][], algorithm: number) {
+    public static aiMove(field: number[][], algorithm: number, randomized:boolean) {
         if (algorithm === 1) {
             Ai.randomAiMove(field);
         } else if (algorithm === 2) {
@@ -22,7 +22,7 @@ export class Ai {
                 throw new Error("Kein Move!");
             }
         } else if (algorithm === 3) {
-            const move = AI_Node.calc_move(field, false);
+            const move = AI_Node.calc_move(field, randomized);
             field[Math.floor(move / 3)][move % 3] = Helper.P_AI;
         }
     }
